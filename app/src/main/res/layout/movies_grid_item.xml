@@ -10,19 +10,20 @@
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/iv_movie_poster"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:paddingTop="22dp"/>
 
         <TextView
             android:id="@+id/tv_movie_title"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|bottom"/>
 
     <View
         android:layout_width="match_parent"

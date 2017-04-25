@@ -4,8 +4,10 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -13,7 +15,6 @@ import android.widget.TextView;
 
 import com.adebayoyeleye.popularmovies.utilities.MoviesJsonUtils;
 import com.adebayoyeleye.popularmovies.utilities.NetworkUtils;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView mErrorMessageDisplay;
 
     private ProgressBar mLoadingIndicator;
+    String sortBy;
 
 
     @Override
@@ -48,10 +50,11 @@ public class MainActivity extends AppCompatActivity {
         mMoviesAdapter = new MoviesAdapter(this);
         mRecyclerView.setAdapter(mMoviesAdapter);
         mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
+        sortBy = getResources().getString(R.string.sort_by_popularity);
         loadMoviesData();
     }
     private void loadMoviesData() {
-        String sortBy = getResources().getString(R.string.sort_by_string);
+        mLoadingIndicator.setVisibility(View.VISIBLE);
         new AClass().execute(NetworkUtils.buildUrl(sortBy, this));
 
 //        mDisplayResult=(TextView)findViewById(R.id.tv_result_display);
@@ -59,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void showWeatherDataView() {
+    private void showMoviesDataView() {
         mErrorMessageDisplay.setVisibility(View.INVISIBLE);
         mRecyclerView.setVisibility(View.VISIBLE);
     }
@@ -89,8 +92,10 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(JSONArray s) {
             super.onPostExecute(s);
+            mLoadingIndicator.setVisibility(View.INVISIBLE);
             if (s!=null && s.length()!=0){
                 mMoviesAdapter.setResults(s);
+                showMoviesDataView();
 
 //                mDisplayResult.setText(s);
             } else {
@@ -98,5 +103,32 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.menu_sortby_popularity) {
+            sortBy = getResources().getString(R.string.sort_by_popularity);
+        }else if (id==R.id.menu_sortby_ratings){
+            sortBy = getResources().getString(R.string.sort_by_rating);
+        } else if (id==R.id.action_refresh){
+ // just refresh the page
+    }
+
+        mMoviesAdapter.setResults(null);
+        loadMoviesData();
+
+//        return true;
+        return super.onOptionsItemSelected(item);
+    }
+
 
 }
