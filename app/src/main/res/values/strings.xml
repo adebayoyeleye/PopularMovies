@@ -2,5 +2,6 @@
     <string name="app_name">PopularMovies</string>
     <string name="api_key_string">xxx</string>
     <string name="sort_by_string">popularity.desc</string>
+    <string name="error_message">if you see this then you got your self a good ole fashion error duh</string>
 
 </resources>
