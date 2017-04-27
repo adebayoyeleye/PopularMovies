@@ -26,7 +26,7 @@ import java.net.URL;
 
 public class MainActivity extends AppCompatActivity implements MoviesAdapter.MoviesAdapterOnClickHandler {
 //    String sortBy = getResources().getString(R.string.sort_by_popularity);
-    String sortBy = "popularity.desc";
+    String sortBy = getResources().getString(R.string.sort_by_popularity);
 //    private TextView mDisplayResult;
 //    private ImageView imageView;
 //    private JSONArray results;
