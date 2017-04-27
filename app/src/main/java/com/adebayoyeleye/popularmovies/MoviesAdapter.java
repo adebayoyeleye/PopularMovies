@@ -22,23 +22,53 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
 
     private JSONArray results;
     private Context context;
+    private final MoviesAdapterOnClickHandler mClickHandler;
 
-    public MoviesAdapter(Context c) {
+
+    MoviesAdapter(Context c, MoviesAdapterOnClickHandler clickHandler) {
         context = c;
+        mClickHandler = clickHandler;
     }
 
 
-    public class MoviesAdapterViewHolder extends RecyclerView.ViewHolder{
+    /**
+     * The interface that receives onClick messages.
+     */
+    interface MoviesAdapterOnClickHandler {
+        void onClick(String weatherForDay);
+    }
+
+
+
+    class MoviesAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView mMovieTitle;
         private ImageView mMoviePoster;
 
-        public MoviesAdapterViewHolder(View itemView) {
+        MoviesAdapterViewHolder(View itemView) {
             super(itemView);
             mMovieTitle = (TextView) itemView.findViewById(R.id.tv_movie_title);
             mMoviePoster = (ImageView)itemView.findViewById(R.id.iv_movie_poster);
+            itemView.setOnClickListener(this);
         }
 
+        @Override
+        public void onClick(View v) {
+            int adapterPosition = getAdapterPosition();
+            JSONObject movieClicked;
+            StringBuilder movieDetails = new StringBuilder("");
+            try {
+                movieClicked = results.getJSONObject(adapterPosition);
+                movieDetails.append(movieClicked.getString("poster_path")+"\n\n\n");
+                movieDetails.append(movieClicked.getString("original_title")+"\n\n\n");
+                movieDetails.append("Synopsis\n"+movieClicked.getString("overview")+"\n\n\n");
+                movieDetails.append("User Rating\n"+movieClicked.getString("vote_average")+"\n\n\n");
+                movieDetails.append("Release Date\n"+movieClicked.getString("release_date")+"\n\n\n");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            mClickHandler.onClick(movieDetails.toString());
+        }
     }
 
     @Override
@@ -74,7 +104,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
         return results.length();
     }
 
-    public void setResults(JSONArray results) {
+    void setResults(JSONArray results) {
         this.results = results;
         notifyDataSetChanged();
     }

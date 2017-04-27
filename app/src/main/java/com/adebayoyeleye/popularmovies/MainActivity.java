@@ -1,5 +1,7 @@
 package com.adebayoyeleye.popularmovies;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,19 +24,16 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.net.URL;
 
-public class MainActivity extends AppCompatActivity {
-    private TextView mDisplayResult;
-    private ImageView imageView;
-    private JSONArray results;
+public class MainActivity extends AppCompatActivity implements MoviesAdapter.MoviesAdapterOnClickHandler {
+//    String sortBy = getResources().getString(R.string.sort_by_popularity);
+    String sortBy = "popularity.desc";
+//    private TextView mDisplayResult;
+//    private ImageView imageView;
+//    private JSONArray results;
     private RecyclerView mRecyclerView;
-
     private MoviesAdapter mMoviesAdapter;
-
     private TextView mErrorMessageDisplay;
-
     private ProgressBar mLoadingIndicator;
-    String sortBy;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,10 +46,9 @@ public class MainActivity extends AppCompatActivity {
 //                = new GridLayoutManager(this,GridLayoutManager.DEFAULT_SPAN_COUNT, GridLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
-        mMoviesAdapter = new MoviesAdapter(this);
+        mMoviesAdapter = new MoviesAdapter(this, this);
         mRecyclerView.setAdapter(mMoviesAdapter);
         mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
-        sortBy = getResources().getString(R.string.sort_by_popularity);
         loadMoviesData();
     }
     private void loadMoviesData() {
@@ -62,6 +60,20 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+    @Override
+    public void onClick(String movieDetails) {
+        Context context = this;
+        Class destinationClass = DetailsActivity.class;
+        Intent intentToStartDetailActivity = new Intent(context, destinationClass);
+        // COMPLETED (1) Pass the weather to the DetailActivity
+        intentToStartDetailActivity.putExtra(Intent.EXTRA_TEXT, movieDetails);
+        startActivity(intentToStartDetailActivity);
+    }
+
+
+
+
     private void showMoviesDataView() {
         mErrorMessageDisplay.setVisibility(View.INVISIBLE);
         mRecyclerView.setVisibility(View.VISIBLE);
@@ -70,38 +82,6 @@ public class MainActivity extends AppCompatActivity {
     private void showErrorMessage() {
         mRecyclerView.setVisibility(View.INVISIBLE);
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
-    }
-
-
-    private class AClass extends AsyncTask<URL,Void,JSONArray> {
-        @Override
-        protected JSONArray doInBackground(URL... params) {
-            URL moviesUrl = params[0];
-            String moviesResultString=null;
-            JSONArray moviesResult=null;
-            try {
-                moviesResultString = NetworkUtils.getResponseFromHttpUrl(moviesUrl);
-                moviesResult = MoviesJsonUtils.setResults(moviesResultString);
-
-            }catch (JSONException| IOException e){
-                e.printStackTrace();
-            }
-            return moviesResult;
-        }
-
-        @Override
-        protected void onPostExecute(JSONArray s) {
-            super.onPostExecute(s);
-            mLoadingIndicator.setVisibility(View.INVISIBLE);
-            if (s!=null && s.length()!=0){
-                mMoviesAdapter.setResults(s);
-                showMoviesDataView();
-
-//                mDisplayResult.setText(s);
-            } else {
-                showErrorMessage();
-            }
-        }
     }
 
     @Override
@@ -128,6 +108,37 @@ public class MainActivity extends AppCompatActivity {
 
 //        return true;
         return super.onOptionsItemSelected(item);
+    }
+
+    private class AClass extends AsyncTask<URL,Void,JSONArray> {
+        @Override
+        protected JSONArray doInBackground(URL... params) {
+            URL moviesUrl = params[0];
+            String moviesResultString;
+            JSONArray moviesResult=null;
+            try {
+                moviesResultString = NetworkUtils.getResponseFromHttpUrl(moviesUrl);
+                moviesResult = MoviesJsonUtils.setResults(moviesResultString);
+
+            }catch (JSONException| IOException e){
+                e.printStackTrace();
+            }
+            return moviesResult;
+        }
+
+        @Override
+        protected void onPostExecute(JSONArray s) {
+            super.onPostExecute(s);
+            mLoadingIndicator.setVisibility(View.INVISIBLE);
+            if (s!=null && s.length()!=0){
+                mMoviesAdapter.setResults(s);
+                showMoviesDataView();
+
+//                mDisplayResult.setText(s);
+            } else {
+                showErrorMessage();
+            }
+        }
     }
 
 
