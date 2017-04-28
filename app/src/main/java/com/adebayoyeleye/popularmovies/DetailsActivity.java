@@ -35,7 +35,12 @@ public class DetailsActivity extends AppCompatActivity {
                 posterDetails = extraText.substring(0,extraText.indexOf("jpg")+3);
 
                 mMovieDetailsDisplay.setText(movieDetails);
-                Picasso.with(this).load("http://image.tmdb.org/t/p/w500/"+posterDetails).into(mPosterImageDisplay);
+//                Picasso.with(this).load("http://image.tmdb.org/t/p/w500/"+posterDetails).into(mPosterImageDisplay);
+                Picasso.with(this)
+                        .load("http://image.tmdb.org/t/p/w500/"+posterDetails)
+                        .placeholder(R.drawable.iv_loading)
+                        .error(R.drawable.ic_action_name)
+                        .into(mPosterImageDisplay);
 
             }
         }

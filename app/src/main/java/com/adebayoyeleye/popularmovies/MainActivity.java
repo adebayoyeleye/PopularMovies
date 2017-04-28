@@ -26,10 +26,7 @@ import java.net.URL;
 
 public class MainActivity extends AppCompatActivity implements MoviesAdapter.MoviesAdapterOnClickHandler {
 //    String sortBy = getResources().getString(R.string.sort_by_popularity);
-    String sortBy = getResources().getString(R.string.sort_by_popularity);
-//    private TextView mDisplayResult;
-//    private ImageView imageView;
-//    private JSONArray results;
+    private String sortBy = "popularity.desc";
     private RecyclerView mRecyclerView;
     private MoviesAdapter mMoviesAdapter;
     private TextView mErrorMessageDisplay;
@@ -66,7 +63,6 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         Context context = this;
         Class destinationClass = DetailsActivity.class;
         Intent intentToStartDetailActivity = new Intent(context, destinationClass);
-        // COMPLETED (1) Pass the weather to the DetailActivity
         intentToStartDetailActivity.putExtra(Intent.EXTRA_TEXT, movieDetails);
         startActivity(intentToStartDetailActivity);
     }

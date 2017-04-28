@@ -90,7 +90,12 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
             String posterPath = movie.getString("poster_path");
 
             holder.mMovieTitle.setText(title);
-            Picasso.with(context).load("http://image.tmdb.org/t/p/w185/"+posterPath).into(holder.mMoviePoster);
+//            Picasso.with(context).load("http://image.tmdb.org/t/p/w185/"+posterPath).into(holder.mMoviePoster);
+            Picasso.with(context)
+                    .load("http://image.tmdb.org/t/p/w185/"+posterPath)
+                    .placeholder(R.drawable.iv_loading)
+                    .error(R.drawable.ic_action_name)
+                    .into(holder.mMoviePoster);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -100,8 +105,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
 
     @Override
     public int getItemCount() {
-        if (results==null)return 0;
-        return results.length();
+//        if (results==null)return 0;
+//        return results.length();
+        return results==null? 0: results.length();
     }
 
     void setResults(JSONArray results) {
