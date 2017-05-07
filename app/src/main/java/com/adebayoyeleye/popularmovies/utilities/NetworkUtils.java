@@ -21,21 +21,19 @@ import java.util.Scanner;
 
 public final class NetworkUtils {
     private static final String TMDB_BASE_URL =
-            "https://api.themoviedb.org/3/discover/movie";
-//            "https://api.themoviedb.org/3/discover/movie?api_key=75e0e640b06746ee8ed8239099a16507&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1";
+            "http://api.themoviedb.org/3/movie/";
 
-    final static String SORT_PARAM = "sort_by";
     final static String API_KEY_PARAM = "api_key";
-    final static String PAGE_PARAM =  "page";
 
     public static URL buildUrl(String sortBy, Context context) {
 
+        String currentBaseUrl = TMDB_BASE_URL+sortBy;
         String apiKey = context.getResources().getString(R.string.api_key_string);
-        Uri builtUri= Uri.parse(TMDB_BASE_URL).buildUpon()
+        Uri builtUri= Uri.parse(currentBaseUrl).buildUpon()
                 .appendQueryParameter(API_KEY_PARAM, apiKey)
-                .appendQueryParameter(SORT_PARAM, sortBy)
-                .appendQueryParameter(PAGE_PARAM,"1")
                 .build();
+
+
 
         URL url=null;
         try {
@@ -50,6 +48,7 @@ public final class NetworkUtils {
     public static String getResponseFromHttpUrl(URL url) throws IOException {
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         try {
+            urlConnection.setConnectTimeout(10000);
             InputStream in = urlConnection.getInputStream();
 
             Scanner scanner = new Scanner(in);

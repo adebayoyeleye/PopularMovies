@@ -30,7 +30,6 @@ public class DetailsActivity extends AppCompatActivity {
             if (intentThatStartedThisActivity.hasExtra(Intent.EXTRA_TEXT)) {
                 String extraText = intentThatStartedThisActivity.getStringExtra(Intent.EXTRA_TEXT);
 
-//                String url = "http://www.youtube-nocookie.com/embed/zaaU9lJ34c5?rel=0";
                 movieDetails  = extraText.substring(extraText.indexOf("jpg") + 3, extraText.length());
                 posterDetails = extraText.substring(0,extraText.indexOf("jpg")+3);
 

@@ -25,8 +25,8 @@ import java.io.IOException;
 import java.net.URL;
 
 public class MainActivity extends AppCompatActivity implements MoviesAdapter.MoviesAdapterOnClickHandler {
-//    String sortBy = getResources().getString(R.string.sort_by_popularity);
-    private String sortBy = "popularity.desc";
+
+    private String sortBy = "popular";
     private RecyclerView mRecyclerView;
     private MoviesAdapter mMoviesAdapter;
     private TextView mErrorMessageDisplay;
@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         mErrorMessageDisplay = (TextView) findViewById(R.id.tv_error_message_display);
         GridLayoutManager layoutManager
                 = new GridLayoutManager(this,3);
-//                = new GridLayoutManager(this,GridLayoutManager.DEFAULT_SPAN_COUNT, GridLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
         mMoviesAdapter = new MoviesAdapter(this, this);
@@ -51,9 +50,6 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     private void loadMoviesData() {
         mLoadingIndicator.setVisibility(View.VISIBLE);
         new AClass().execute(NetworkUtils.buildUrl(sortBy, this));
-
-//        mDisplayResult=(TextView)findViewById(R.id.tv_result_display);
-//        imageView = (ImageView) findViewById(R.id.iv_test);
 
     }
 
@@ -102,7 +98,6 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         mMoviesAdapter.setResults(null);
         loadMoviesData();
 
-//        return true;
         return super.onOptionsItemSelected(item);
     }
 
@@ -130,7 +125,6 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
                 mMoviesAdapter.setResults(s);
                 showMoviesDataView();
 
-//                mDisplayResult.setText(s);
             } else {
                 showErrorMessage();
             }
